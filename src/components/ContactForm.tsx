@@ -18,6 +18,7 @@ const ContactForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [submittedData, setSubmittedData] = useState<any>(null)
+  const [error, setError] = useState<string | null>(null)
 
   const countries = [
     'Latvia',
@@ -33,70 +34,32 @@ const ContactForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
-    
-    // Store submitted data for success message
-    setSubmittedData(formData)
-    
-    // Create detailed WhatsApp message with all form data
-    const whatsappMessage = `🎓 *NEXTSTEP INQUIRY*
-
-👤 *Name:* ${formData.name}
-📧 *Email:* ${formData.email}
-📱 *WhatsApp:* ${formData.whatsapp}
-🌍 *Country Interest:* ${formData.country}
-
-💬 *Message:*
-${formData.message}
-
----
-Sent via NEXTSTEP website contact form`
-
-    // Create professional email to consultant
-    const emailSubject = `New Student Inquiry: ${formData.name} - ${formData.country}`
-    const emailBody = `Dear NEXTSTEP Team,
-
-New student inquiry received through the website:
-
-Student Details:
-- Name: ${formData.name}
-- Email: ${formData.email}
-- WhatsApp: ${formData.whatsapp}
-- Country of Interest: ${formData.country}
-
-Message:
-${formData.message}
-
-Please follow up within 24 hours.
-
-Quick Actions:
-- Reply to: ${formData.email}
-- WhatsApp: https://wa.me/${formData.whatsapp.replace(/[^0-9]/g, '')}
-
-Best regards,
-NEXTSTEP Website System`
+    setError(null)
 
     try {
-      // Simulate processing time
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      
-      // Open both communication channels
-      window.open(`https://wa.me/37126321512?text=${encodeURIComponent(whatsappMessage)}`, '_blank')
-      window.open(`mailto:consultant.ns.nextstep@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`, '_blank')
-      
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      })
+
+      if (!res.ok) {
+        const payload = await res.json().catch(() => ({}))
+        throw new Error(payload?.error || 'Email failed')
+      }
+
+      setSubmittedData(formData)
       setSubmitted(true)
-    } catch (error) {
-      console.error('Error processing form:', error)
-      setSubmitted(true)
+    } catch (err: any) {
+      console.error('Error processing form:', err)
+      setError(err?.message || 'Something went wrong. Please try again.')
+    } finally {
+      setIsSubmitting(false)
     }
-    
-    setIsSubmitting(false)
   }
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }))
+    setFormData(prev => ({ ...prev, [field]: value }))
   }
 
   if (submitted) {
@@ -108,23 +71,30 @@ NEXTSTEP Website System`
           </svg>
         </div>
         <h3 className="text-xl font-semibold text-green-800 mb-2">Thank You!</h3>
-        <p className="text-green-600 mb-6">
-          ✅ Your inquiry has been sent! We've opened WhatsApp and Email for you to connect directly with our consultants.
+        <p className="text-green-700 mb-6">
+          ✅ Your inquiry was sent to our consultants. We’ll reply within 24 hours.
         </p>
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-          <p className="text-blue-800 font-medium mb-2">📱 What just happened?</p>
-          <ul className="text-blue-700 text-sm space-y-1">
-            <li>• ✅ WhatsApp opened with your inquiry details</li>
-            <li>• ✅ Email draft created for <strong>consultant.ns.nextstep@gmail.com</strong></li>
-            <li>• ✅ Your details: <strong>{submittedData?.name}</strong> interested in <strong>{submittedData?.country}</strong></li>
-            <li>• ⏰ Response within 24 hours guaranteed</li>
+
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4 text-left">
+          <p className="text-blue-800 font-medium mb-2">Submission details</p>
+          <ul className="text-blue-800 text-sm space-y-1">
+            <li>• Name: <strong>{submittedData?.name}</strong></li>
+            <li>• Email: <strong>{submittedData?.email}</strong></li>
+            <li>• WhatsApp: <strong>{submittedData?.whatsapp}</strong></li>
+            <li>• Country: <strong>{submittedData?.country}</strong></li>
           </ul>
         </div>
+
         <div className="bg-green-50 border border-green-200 rounded-lg p-4">
           <p className="text-green-800 text-sm">
-            <strong>📞 Direct Contact Available:</strong><br />
-            WhatsApp: <a href="https://wa.me/37126321512" className="font-medium underline" target="_blank" rel="noopener noreferrer">+371 26 321 512</a> | <a href="https://wa.me/48516875116" className="font-medium underline" target="_blank" rel="noopener noreferrer">+48 516 875 116</a><br />
-            Email: <a href="mailto:consultant.ns.nextstep@gmail.com" className="font-medium underline">consultant.ns.nextstep@gmail.com</a>
+            <strong>Prefer WhatsApp?</strong>{' '}
+            <a href="https://wa.me/37126321512" className="font-medium underline" target="_blank" rel="noopener noreferrer">
+              Chat here
+            </a>{' '}
+            or{' '}
+            <a href="https://wa.me/48516875116" className="font-medium underline" target="_blank" rel="noopener noreferrer">
+              here
+            </a>.
           </p>
         </div>
       </div>
@@ -135,9 +105,7 @@ NEXTSTEP Website System`
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <Label htmlFor="name" className="text-sm font-medium text-gray-700">
-            Full Name *
-          </Label>
+          <Label htmlFor="name" className="text-sm font-medium text-gray-700">Full Name *</Label>
           <Input
             id="name"
             type="text"
@@ -148,11 +116,9 @@ NEXTSTEP Website System`
             placeholder="Enter your full name"
           />
         </div>
-        
+
         <div>
-          <Label htmlFor="email" className="text-sm font-medium text-gray-700">
-            Email Address *
-          </Label>
+          <Label htmlFor="email" className="text-sm font-medium text-gray-700">Email Address *</Label>
           <Input
             id="email"
             type="email"
@@ -167,9 +133,7 @@ NEXTSTEP Website System`
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <Label htmlFor="whatsapp" className="text-sm font-medium text-gray-700">
-            WhatsApp Number *
-          </Label>
+          <Label htmlFor="whatsapp" className="text-sm font-medium text-gray-700">WhatsApp Number *</Label>
           <Input
             id="whatsapp"
             type="tel"
@@ -180,11 +144,9 @@ NEXTSTEP Website System`
             placeholder="+1234567890"
           />
         </div>
-        
+
         <div>
-          <Label htmlFor="country" className="text-sm font-medium text-gray-700">
-            Country of Interest *
-          </Label>
+          <Label htmlFor="country" className="text-sm font-medium text-gray-700">Country of Interest *</Label>
           <Select value={formData.country} onValueChange={(value) => handleInputChange('country', value)}>
             <SelectTrigger className="mt-1">
               <SelectValue placeholder="Select a country" />
@@ -202,9 +164,7 @@ NEXTSTEP Website System`
       </div>
 
       <div>
-        <Label htmlFor="message" className="text-sm font-medium text-gray-700">
-          Message *
-        </Label>
+        <Label htmlFor="message" className="text-sm font-medium text-gray-700">Message *</Label>
         <Textarea
           id="message"
           required
@@ -216,6 +176,10 @@ NEXTSTEP Website System`
         />
       </div>
 
+      {error && (
+        <p className="text-red-600 text-sm">{error}</p>
+      )}
+
       <div className="flex flex-col sm:flex-row gap-4">
         <Button
           type="submit"
@@ -224,7 +188,8 @@ NEXTSTEP Website System`
         >
           {isSubmitting ? 'Sending...' : 'Send Inquiry'}
         </Button>
-        
+
+        {/* Optional: keep WhatsApp as a separate manual channel */}
         <Button
           type="button"
           variant="outline"
