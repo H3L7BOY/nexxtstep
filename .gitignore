@@ -10,7 +10,7 @@ out/
 dist/
 build/
 
-# Env files (never commit secrets)
+# Environment variables (never commit secrets)
 .env
 .env.local
 .env.*.local
@@ -33,5 +33,5 @@ pnpm-debug.log*
 coverage/
 
 # Vercel / deploy metadata
-.vercel/
+.vercel/ 
 EOF
