@@ -66,12 +66,21 @@
     "zod": "^3.24.4"
   },
   "devDependencies": {
+<<<<<<< HEAD
     "@eslint/eslintrc": "^3.1.0",
     "@tailwindcss/postcss": "^4.0.0",
     "@types/node": "^20.11.0",
     "@types/nodemailer": "^6.4.15",
     "@types/react": "^18.3.0",
     "@types/react-dom": "^18.3.0",
+=======
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/nodemailer": "^7.0.3",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+>>>>>>> 3ba43244 (Update latest project changes from Codespace)
     "autoprefixer": "^10.4.21",
     "eslint": "8.57.1",
     "eslint-config-next": "15.3.2",
