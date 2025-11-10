@@ -1,7 +1,37 @@
-node_modules
-.next
-out
-dist
+cat > .gitignore << 'EOF'
+# Dependencies
+node_modules/
+
+# Next.js output
+.next/
+out/
+
+# Build artifacts
+dist/
+build/
+
+# Env files (never commit secrets)
 .env
 .env.local
 .env.*.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+
+# TypeScript
+*.tsbuildinfo
+
+# Coverage
+coverage/
+
+# Vercel / deploy metadata
+.vercel/
+EOF
