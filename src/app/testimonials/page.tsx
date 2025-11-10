@@ -252,17 +252,30 @@ const TestimonialsPage = () => {
                 Contact us to share your story and help inspire the next generation of students.
               </p>
               <div className="space-y-3">
-                <Button asChild className="w-full bg-white text-[#0B495A] hover:bg-gray-100">
-                  <a href="https://wa.me/37126321512?text=Hi%20NEXTSTEP,%20I'd%20like%20to%20share%20my%20success%20story%20studying%20in%20Europe." target="_blank" rel="noopener noreferrer">
-                    Share via WhatsApp
-                  </a>
-                </Button>
-                <Button asChild variant="outline" className="w-full border-white text-white hover:bg-white hover:text-[#0B495A]">
-                  <a href="mailto:consultant.ns.nextstep@gmail.com?subject=Student Success Story Submission">
-                    Email Your Story
-                  </a>
-                </Button>
-              </div>
+  <Button
+    asChild
+    className="w-full bg-white text-[#0B495A] font-medium hover:bg-gray-100 transition-colors"
+  >
+    <a
+      href="https://wa.me/37126321512?text=Hi%20NEXTSTEP,%20I'd%20like%20to%20share%20my%20success%20story%20studying%20in%20Europe."
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Share via WhatsApp
+    </a>
+  </Button>
+
+  <Button
+    asChild
+    variant="outline"
+    className="w-full bg-transparent border-white text-white font-medium hover:bg-white hover:text-[#0B495A] transition-colors"
+  >
+    <a href="mailto:consultant.ns.nextstep@gmail.com?subject=Student Success Story Submission">
+      Email Your Story
+    </a>
+  </Button>
+</div>
+
             </div>
           </div>
         </div>
