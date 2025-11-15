@@ -31,10 +31,15 @@ const Header = () => {
                 height={40}
                 className="rounded-md"
               />
-              <div className="hidden sm:block">
-                <span className="text-xl font-bold" style={{ color: '#0B495A' }}>NEXTSTEP</span>
-                <p className="text-xs font-medium" style={{ color: '#6C8A92' }}>FOR YOUR BEST STEP</p>
-              </div>
+              <div className="ml-2 flex flex-col leading-tight">
+  <span className="text-base sm:text-xl font-bold text-[#0B495A]">
+    NEXTSTEP
+  </span>
+  <p className="text-[10px] sm:text-xs font-medium text-[#6C8A92]">
+    FOR YOUR BEST STEP
+  </p>
+</div>
+
             </Link>
           </div>
 
